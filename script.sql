@@ -61,7 +61,7 @@
 	) temp
 	INNER JOIN PMI_PATIENT pp ON pp.PATIENT_KEY = temp.PATIENT_KEY AND nvl(pp.IS_MOCK_UP,0) = 0
 	WHERE temp.NUM = 1
-	--AND temp.SDT >= to_date(:i_startDate,'yyyy-mm-dd') and temp.SDT < to_date(:i_endDate,'yyyy-mm-dd')+1
+	AND temp.SDT >= to_date(:i_startDate,'yyyy-mm-dd') and temp.SDT < to_date(:i_endDate,'yyyy-mm-dd')+1
 	GROUP BY temp.SITE_ID
 )
 SELECT
