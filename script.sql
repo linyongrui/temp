@@ -1,4 +1,10 @@
-
+create or replace PROCEDURE RPT_STH_R049_PROC (
+    i_startDate IN VARCHAR2,
+    i_endDate IN VARCHAR2,
+	o_ret_val IN OUT SYS_REFCURSOR
+) AS
+BEGIN
+OPEN o_ret_val FOR
 WITH SHSC_ENCNTR_TYPE_IDS AS (
 	SELECT distinct ENCNTR_TYPE_ID 
     FROM CLN_ENCNTR_TYPE 
@@ -34,7 +40,8 @@ appt_match as (
         and aad.rm_id in (select rm_id from SHSC_RM_IDS) 
 )
 select * from (
-    select aa.appt_date,aa.appt_count,sess.sess_desc,s.site_cd from(
+    select appt_date,to_char(aa.appt_date,'DD-Mon-RR') as appt_date_str,aa.appt_count,sess.sess_desc,s.site_cd
+    from(
         select appt_date,sess_id,site_id,count(appt_id) as appt_count 
         from appt_match 
         group by appt_date,sess_id,site_id
@@ -60,3 +67,5 @@ PIVOT (
         'WKNS' as WK)
 )
 order by appt_date
+;
+END;
