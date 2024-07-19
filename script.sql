@@ -10,20 +10,6 @@ WITH STH_CLINICS AS (
     FROM CMN_SITE 
     WHERE SVC_CD = 'STH' 
     AND IS_MOCK_UP = 0
-    AND site_cd in(
-        'CWNS',
-        'KBYS',
-        'KCYS',
-        'LTNS',
-        'SKCS',
-        'STIS',
-        'TPOS',
-        'SWHS',
-        'TMNS',
-        'WTNS',
-        'WYYS',
-        'YLGS',
-        'WKNS')
 ),
 SHSC_ENCNTR_TYPE_IDS AS (
 	SELECT distinct ENCNTR_TYPE_ID 
@@ -35,7 +21,7 @@ SHSC_RM_IDS AS (
 	SELECT distinct rm_id
     FROM CLN_RM
     WHERE site_ID in (select site_id from STH_CLINICS)
---    AND (RM_CD = 'MO' or RM_CD = 'MO & Nurse') 
+    AND (RM_CD = 'MO' or RM_CD = 'MO & Nurse') 
 ),
 appt_by_date_rang as (
     select APPT_ID,appt_date,site_ID 
@@ -53,51 +39,29 @@ appt_match as (
         and aad.ENCNTR_TYPE_ID in (select ENCNTR_TYPE_ID from SHSC_ENCNTR_TYPE_IDS) 
         and aad.rm_id in (select rm_id from SHSC_RM_IDS) 
 ),
-appt_counter as(
-    select * from (
-        select appt_date,aa.appt_count,sess.sess_desc,s.site_cd
-        from(
-            select TRUNC(APPT_DATE) as appt_date,sess_id,site_id,count(appt_id) as appt_count 
-            from appt_match 
-            group by TRUNC(APPT_DATE),sess_id,site_id
-        ) aa
-        inner join STH_CLINICS s on s.site_id=aa.site_id
-        INNER JOIN CLN_SESS sess ON sess.sess_id = aa.sess_id 
-    )
-    PIVOT (
-        max(appt_count) as appt_count
-        for site_cd in(
-            'CWNS' as CW,
-            'KBYS' as KB,
-            'KCYS' as KC,
-            'LTNS' as LT,
-            'SKCS' as SKC,
-            'STIS' as ST1,
-            'TPOS' as ST2,
-            'SWHS' as SWH,
-            'TMNS' as TM,
-            'WTNS' as WT,
-            'WYYS' as WYY,
-            'YLGS' as YL,
-            'WKNS' as WK
-        )
-    )
+appt_counter as (
+    select APPT_DATE,aa.APPT_COUNT,sess.SESS_DESC,aa.SITE_ID
+    from(
+        select TRUNC(APPT_DATE) as appt_date,sess_id,site_id,count(appt_id) as APPT_COUNT 
+        from appt_match 
+        group by TRUNC(APPT_DATE),sess_id,site_id
+    ) aa
+    INNER JOIN CLN_SESS sess ON sess.sess_id = aa.sess_id 
 )
-SELECT to_char(appt_date,'DD-Mon-RR') as appt_date_str,sess_desc,
-    nvl(CW_APPT_COUNT,0) as CW,
-    nvl(KB_APPT_COUNT,0) as KB,
-    nvl(KC_APPT_COUNT,0) as KC,
-    nvl(LT_APPT_COUNT,0) as LT,
-    nvl(SKC_APPT_COUNT,0) as SKC,
-    nvl(ST1_APPT_COUNT,0) as ST1,
-    nvl(ST2_APPT_COUNT,0) as ST2,
-    nvl(SWH_APPT_COUNT,0) as SWH,
-    nvl(TM_APPT_COUNT,0) as TM,
-    nvl(WT_APPT_COUNT,0) as WT,
-    nvl(WYY_APPT_COUNT,0) as WYY,
-    nvl(YL_APPT_COUNT,0) as YL,
-    nvl(WK_APPT_COUNT,0) as WK
-from appt_counter
-order by appt_date
-;
+, appt_list as (
+    select a.appt_count,header.* from(
+        select * from STH_CLINICS
+        inner join
+        (select appt_date,sess_desc from appt_counter group by appt_date,sess_desc)
+        on 1=1
+    ) header
+    left join appt_counter a
+        on header.appt_date=a.appt_date
+        and header.sess_desc=a.sess_desc
+        and header.site_id=a.site_id
+)
+select to_char(APPT_DATE,'dd-Mon-RR','NLS_DATE_LANGUAGE=AMERICAN') AS APPT_DATE_STR,
+    sess_desc,site_cd,appt_count
+from appt_list
+order by appt_date,sess_desc,site_cd;
 END;
