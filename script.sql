@@ -65,3 +65,4 @@ select to_char(APPT_DATE,'dd-Mon-RR','NLS_DATE_LANGUAGE=AMERICAN') AS APPT_DATE_
 from appt_list
 order by appt_date,sess_desc,site_cd;
 END;
+
