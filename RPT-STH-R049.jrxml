@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.2.final using JasperReports Library version 6.12.2-75c5e90a222ab406e416cbf590a5397028a52de3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RPT-STH-R049" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0e7ef1bf-dcc7-47e1-85d3-78a2d6f12c75">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="50"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Crosstab 1_CH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab 1_CG" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab 1_CT" mode="Opaque" backcolor="#005FB3">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab 1_CD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Dataset1" uuid="fe72e236-5282-4701-9391-71ccd07dc8a4">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+		<parameter name="FROM_DATE" class="java.lang.String"/>
+		<parameter name="TO_DATE" class="java.lang.String"/>
+		<queryString language="plsql">
+			<![CDATA[{call CIMS.Terry_procedure_name($P{FROM_DATE}, $P{TO_DATE}, $P{ORACLE_REF_CURSOR})}]]>
+		</queryString>
+		<field name="APPT_DATE_STR" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="APPT_DATE"/>
+		</field>
+		<field name="SESS_DESC" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="SESS_DESC"/>
+		</field>
+		<field name="SITE_CD" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="SITE_CD"/>
+		</field>
+		<field name="APPT_COUNT" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="APPT_COUNT"/>
+		</field>
+	</subDataset>
+	<parameter name="END_DATE" class="java.lang.String"/>
+	<parameter name="START_DATE" class="java.lang.String"/>
+	<queryString language="plsql">
+		<![CDATA[SELECT 1 FROM dual]]>
+	</queryString>
+	<variable name="REPORT_PAGE" class="java.lang.Integer" resetType="Page">
+		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
+		<initialValueExpression><![CDATA[$V{PAGE_NUMBER} + 1]]></initialValueExpression>
+	</variable>
+	<background>
+		<band>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</background>
+	<pageHeader>
+		<band height="30" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement x="80" y="0" width="630" height="15" uuid="afac8824-2e94-4004-bece-3d79dfd8e515">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" markup="html">
+					<font fontName="Arial" size="12.5" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<u>SHSC Appointment for Doctor By Centre & Session Dated From " + new SimpleDateFormat("dd-MMM-YY",Locale.US).format(new SimpleDateFormat("yyyy-MM-dd").parse($P{START_DATE}))+" to "+new SimpleDateFormat("dd-MMM-YY",Locale.US).format(new SimpleDateFormat("yyyy-MM-dd").parse($P{END_DATE}))+"<u>"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="710" y="0" width="33" height="15" uuid="26514627-f3b9-4132-a583-0e05fb3cf688">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Page : ]]></text>
+			</staticText>
+			<textField evaluationTime="Auto">
+				<reportElement x="743" y="0" width="59" height="15" uuid="5cce807a-2c82-414f-bc0c-53fb1ee6d604">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT} != 0 ?msg("{0} of {1}", $V{REPORT_PAGE}, $V{PAGE_NUMBER}) : "1 of 1"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="710" y="15" width="33" height="15" uuid="14c62ce8-7ba4-41da-ae2c-c36ed35b2b13">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<text><![CDATA[Date : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="743" y="15" width="59" height="15" uuid="6dddc2e8-aa62-4919-abb9-633e79f0d8ad">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Arial" size="10" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd-MM-yyyy",Locale.US).format(new Date());]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="80" height="30" uuid="e566759d-92fb-40da-83c8-4a08d8a8299c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Arial" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[RPT-STH-R049]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="60">
+			<crosstab>
+				<reportElement x="0" y="0" width="802" height="60" uuid="bca3a1b4-cf15-4323-8d94-bb0b2859cb53">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab 1_CH"/>
+					<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab 1_CG"/>
+					<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab 1_CT"/>
+					<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab 1_CD"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<crosstabDataset isDataPreSorted="true">
+					<dataset resetType="Report">
+						<datasetRun subDataset="Dataset1" uuid="c90cef42-6e2d-4020-8d65-0f91794cb17f">
+							<datasetParameter name="TO_DATE">
+								<datasetParameterExpression><![CDATA[$P{END_DATE}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="FROM_DATE">
+								<datasetParameterExpression><![CDATA[$P{START_DATE}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+					</dataset>
+				</crosstabDataset>
+				<crosstabHeaderCell>
+					<cellContents>
+						<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<staticText>
+							<reportElement x="67" y="0" width="67" height="20" uuid="6c6d2d78-5714-4740-8be0-4f0ac48386fb">
+								<property name="com.jaspersoft.studio.unit.y" value="px"/>
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<box padding="2">
+								<pen lineWidth="0.5"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Bottom">
+								<font fontName="Arial" size="10" isBold="false"/>
+							</textElement>
+							<text><![CDATA[APPT_SESS]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="0" y="0" width="67" height="20" uuid="a36c6066-eaaa-4c39-b641-df5a5f0bd43f">
+								<property name="com.jaspersoft.studio.unit.y" value="px"/>
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<box padding="2">
+								<pen lineWidth="0.5"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Bottom">
+								<font fontName="Arial" size="10" isBold="false"/>
+							</textElement>
+							<text><![CDATA[APPT_DATE]]></text>
+						</staticText>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="APPT_DATE_STR" width="67" mergeHeaderCells="true">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{APPT_DATE_STR}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#FFFFFF" mode="Opaque" style="Crosstab 1_CH">
+							<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="67" height="20" uuid="bfb477a7-d4ad-4b2d-b0dd-80bbfd24606e">
+									<property name="com.jaspersoft.studio.unit.width" value="px"/>
+									<printWhenExpression><![CDATA[$V{APPT_DATE_STR} != null]]></printWhenExpression>
+								</reportElement>
+								<box padding="3"/>
+								<textElement textAlignment="Right">
+									<font fontName="Arial"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{APPT_DATE_STR}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents>
+							<staticText>
+								<reportElement x="0" y="0" width="-2147483648" height="-2147483648" uuid="a32ad2ea-d923-4bbf-8e4a-089f46bfa011"/>
+								<text><![CDATA[Total APPT_DATE_STR]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="SESS_DESC" width="67" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{SESS_DESC}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#FFFFFF" mode="Opaque" style="Crosstab 1_CH">
+							<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="67" height="20" uuid="0bb12e6f-6e70-4b62-8c12-69a4a78ad8cf">
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+									<printWhenExpression><![CDATA[$V{SESS_DESC} != null]]></printWhenExpression>
+								</reportElement>
+								<box padding="3"/>
+								<textElement>
+									<font fontName="HAFontSet"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{SESS_DESC}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents backcolor="#FFFFFF" mode="Opaque" style="Crosstab 1_CG">
+							<staticText>
+								<reportElement x="0" y="0" width="67" height="20" uuid="1fb896f6-3cbb-48e8-9a85-3e7faf22862f">
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+								</reportElement>
+								<box padding="3"/>
+								<textElement>
+									<font fontName="Arial"/>
+								</textElement>
+								<text><![CDATA[TOTAL]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="SITE_CD" height="20">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{SITE_CD}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#FFFFFF" mode="Opaque" style="Crosstab 1_CH">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="41" height="20" uuid="c2ca2b2c-a04b-4d12-9077-dc622606dc21">
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+								</reportElement>
+								<box padding="2"/>
+								<textElement textAlignment="Center" verticalAlignment="Bottom">
+									<font fontName="Arial"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{SITE_CD}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents>
+							<staticText>
+								<reportElement x="0" y="0" width="-2147483648" height="-2147483648" uuid="b63a3a64-a841-4052-bbb8-4ba49eacbe86"/>
+								<text><![CDATA[Total SITE_CD]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="APPT_COUNT_MEASURE" class="java.lang.Integer" calculation="Count">
+					<measureExpression><![CDATA[$F{APPT_COUNT}]]></measureExpression>
+				</measure>
+				<crosstabCell width="41" height="20">
+					<cellContents mode="Opaque" style="Crosstab 1_CD">
+						<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+							<reportElement x="0" y="0" width="41" height="20" uuid="7808c22f-e5c0-4a46-a929-1fece34fe7ff">
+								<printWhenExpression><![CDATA[$V{APPT_COUNT_MEASURE}  != null]]></printWhenExpression>
+							</reportElement>
+							<box padding="3"/>
+							<textElement textAlignment="Right">
+								<font fontName="Arial"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{APPT_COUNT_MEASURE} ==0?"":$V{APPT_COUNT_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" columnTotalGroup="SITE_CD">
+					<cellContents mode="Opaque" style="Crosstab 1_CT">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="f3af84ea-44fe-460a-85ba-1d8fbe827cde"/>
+							<textFieldExpression><![CDATA[$V{APPT_COUNT_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="APPT_DATE_STR">
+					<cellContents mode="Opaque" style="Crosstab 1_CT">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="f86893a7-cf3f-4615-8a45-6bc377356f66"/>
+							<textFieldExpression><![CDATA[$V{APPT_COUNT_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="APPT_DATE_STR" columnTotalGroup="SITE_CD">
+					<cellContents mode="Opaque" style="Crosstab 1_CT">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="2429bdc4-2a79-4c11-8d46-e949d62ab094"/>
+							<textFieldExpression><![CDATA[$V{APPT_COUNT_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="41" height="20" rowTotalGroup="SESS_DESC">
+					<cellContents backcolor="#FFFFFF" mode="Opaque" style="Crosstab 1_CG">
+						<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+							<reportElement x="0" y="0" width="41" height="20" uuid="e1b6fed2-9b60-4f32-a4ee-ad40bbeaa7e2"/>
+							<box padding="3"/>
+							<textElement textAlignment="Right">
+								<font fontName="Arial"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{APPT_COUNT_MEASURE}==0?"":$V{APPT_COUNT_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="SESS_DESC" columnTotalGroup="SITE_CD">
+					<cellContents mode="Opaque" style="Crosstab 1_CT">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="ac9fcb9d-5924-4dba-870d-56e8cf8aab59"/>
+							<textFieldExpression><![CDATA[$V{APPT_COUNT_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="15">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="15">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="15" uuid="0fac6f59-a715-494b-8f50-e48a25432801">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[*** End of Report ***]]></text>
+			</staticText>
+		</band>
+	</lastPageFooter>
+</jasperReport>
