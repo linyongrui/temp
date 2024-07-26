@@ -1,42 +1,50 @@
-create or replace PROCEDURE      "RPT_STH_R030_PROC" (
-    i_siteId IN VARCHAR2,
-    i_start_date IN VARCHAR2,
-    i_end_date IN VARCHAR2,
-	o_ret_val IN OUT SYS_REFCURSOR
-) AS
-BEGIN
-OPEN o_ret_val FOR
+
 WITH MONTH_YEAR AS (
-	SELECT TO_CHAR(ADD_MONTHS(TO_DATE(i_start_date,'YYYY-MM'),Rownum -1),'MM/YY') AS month_year FROM dual
-	CONNECT BY Rownum <= (SELECT MONTHS_BETWEEN(to_date(i_end_date,'YYYY-MM'), to_date(i_start_date,'YYYY-MM')) FROM dual)
+	SELECT TO_CHAR(ADD_MONTHS(TO_DATE(:i_start_date,'YYYY-MM'),Rownum -1),'MM/YY') AS MONTH_YEAR FROM DUAL
+	CONNECT BY Rownum <= (SELECT MONTHS_BETWEEN(to_date(:i_end_date,'YYYY-MM'), to_date(:i_start_date,'YYYY-MM'))+1 FROM dual)
 )
 ,STH_CLINIC AS (
-	SELECT SITE_ID FROM CMN_SITE cs WHERE cs.SVC_CD ='STH' AND nvl(cs.IS_MOCK_UP,0) = 0
+	SELECT SITE_ID,SITE_CD FROM CMN_SITE cs WHERE cs.SVC_CD ='STH' AND nvl(cs.IS_MOCK_UP,0) = 0 AND cs.SITE_ID = DECODE(:i_siteId,'-',cs.SITE_ID,:i_siteId)
 )
 ,SHSC_AA_ENCNTRTYPE_IDS AS (
-	SELECT cet.ENCNTR_TYPE_ID FROM CLN_ENCNTR_TYPE cet 
-	INNER JOIN STH_CLINIC c ON c.SITE_ID = cet.SITE_ID 
-	WHERE cet.SVC_CD ='STH' AND cet.ENCNTR_TYPE_CD ='SHSC-AA' 
-	AND (cet.SITE_ID IS NULL OR cet.SITE_ID = DECODE(i_siteId,'-',cet.SITE_ID,i_siteId))
+	SELECT ENCNTR_TYPE_ID FROM (
+		SELECT cet.ENCNTR_TYPE_ID, cet.SITE_ID FROM CLN_ENCNTR_TYPE cet 	
+		WHERE cet.SVC_CD ='STH' AND cet.ENCNTR_TYPE_CD ='SHSC-AA'
+	) cet
+	WHERE cet.SITE_ID IS NULL OR (cet.SITE_ID IN (SELECT SITE_ID FROM STH_CLINIC))
 )
-,SHSC_AA_APPT_IDS AS (
-	SELECT DISTINCT aa.APPT_ID FROM ANA_APPT aa 
-	INNER JOIN ANA_APPT_DETL aad ON aad.APPT_ID = aa.APPT_ID AND aad.ENCNTR_TYPE_ID IN (SELECT * FROM SHSC_AA_ENCNTRTYPE_IDS)
-	INNER JOIN STH_CLINIC c ON c.SITE_ID = aa.SITE_ID 
-	WHERE aa.SITE_ID = DECODE(i_siteId,'-',aa.SITE_ID,i_siteId)
-)
-, apptCounts AS  (
-	SELECT 
-	to_char(ala.APPT_DATE,'MM/YY') AS month_year, count(APPT_ID) AS changeCounts
+,DATE_RANGE_APPT_IDS AS (
+	SELECT ala.CREATE_DTM , ala.APPT_ID 
 	FROM ANA_LOG_APPT ala 
 	WHERE 
-    ala.APPT_DATE >= to_date(i_start_date,'YYYY-MM') 
-    AND ala.APPT_DATE < to_date(i_end_date,'YYYY-MM')
-	AND APPT_ID IN (SELECT APPT_ID FROM SHSC_AA_APPT_IDS)
-	AND ala.APPT_TYPE_CD = 'R'
-	GROUP BY to_char(ala.APPT_DATE,'MM/YY')
+    ala.CREATE_DTM >= to_date(:i_start_date,'YYYY-MM') 
+    AND ala.CREATE_DTM <= to_date(:i_end_date,'YYYY-MM')
+    AND ala.APPT_TYPE_CD = 'R'
 )
-SELECT my.month_year, nvl(c.changeCounts,0) AS change_counts FROM MONTH_YEAR my
-LEFT JOIN apptCounts c ON my.month_year = c.month_year
-ORDER BY my.month_year;
-END;
+, SHSC_AA_APPTS AS  (
+	SELECT apptIds.CREATE_DTM, apptIds.APPT_ID FROM DATE_RANGE_APPT_IDS apptIds 
+	INNER JOIN ANA_APPT aa ON aa.APPT_ID = apptIds.APPT_ID 
+		AND aa.SITE_ID = DECODE(:i_siteId,'-',aa.SITE_ID,:i_siteId) 
+		AND aa.APPT_TYPE_CD <> 'N' 
+		AND aa.CREATE_DTM <= to_date(:i_end_date,'YYYY-MM')
+	INNER JOIN ANA_APPT_DETL aad ON aad.APPT_ID = apptIds.APPT_ID 
+		AND aad.ENCNTR_TYPE_ID IN (SELECT * FROM SHSC_AA_ENCNTRTYPE_IDS)
+)
+, APPT_COUNTS AS  (
+	SELECT TO_CHAR(CREATE_DTM,'MM/YY') AS MONTH_YEAR, COUNT(APPT_ID) AS counts
+	FROM SHSC_AA_APPTS 
+	GROUP BY TO_CHAR(CREATE_DTM,'MM/YY')
+)
+SELECT 
+my.MONTH_YEAR, nvl(c.counts,0) AS CHANGE_COUNTS,SITE_CD
+FROM (
+	SELECT SITE_CD 
+	FROM STH_CLINIC 
+	WHERE decode(:i_siteId,'-',NULL,:i_siteId) IS NOT NULL AND SITE_ID =:i_siteId
+	UNION
+	SELECT 'All Clinic' AS SITE_CD FROM DUAL
+	WHERE decode(:i_siteId,'-',NULL,:i_siteId) IS NULL
+) temp
+LEFT JOIN MONTH_YEAR my ON 1=1 
+LEFT JOIN APPT_COUNTS c ON my.MONTH_YEAR = c.MONTH_YEAR
+ORDER BY TO_DATE(my.MONTH_YEAR,'MM/YY');
