@@ -89,16 +89,21 @@ WITH TBC_CMN_SITE AS (
 	WHERE cet.SVC_CD = 'TBC' 
 	AND cet.ENCNTR_TYPE_CD IN ('TBC_CONS','TBC_TREAT')
 )
-, TBC_CLC_ENCNTR AS (
+, TBC_CLC_ENCNTR_1 AS (
 	SELECT 
-		ce.ATND_ID, ce.PATIENT_KEY,ce.SDT, cet.ENCNTR_TYPE_CD
+		ce.ATND_ID, ce.PATIENT_KEY,ce.SDT, ce.ENCNTR_TYPE_ID, ce.SITE_ID 
 	FROM CLC_ENCNTR ce 
-	INNER JOIN TBC_ENCNTR_TYPE cet ON cet.ENCNTR_TYPE_ID = ce.ENCNTR_TYPE_ID
-	INNER JOIN TBC_CMN_SITE cs ON cs.SITE_ID = ce.SITE_ID
 	WHERE ce.SVC_CD = 'TBC'
 	AND ce.SDT >= TO_DATE(:i_from_date, 'YYYY-MM-dd') AND ce.SDT < TO_DATE(:i_to_date, 'YYYY-MM-dd') + 1
 	AND NVL(ce.IS_CANCEL, 0) = 0
 	AND (ce.ENCNTR_STS IS NULL OR ce.ENCNTR_STS < 'D' OR ce.ENCNTR_STS > 'D')
+)
+, TBC_CLC_ENCNTR AS (
+	SELECT 
+		ce.ATND_ID, ce.PATIENT_KEY,ce.SDT, cet.ENCNTR_TYPE_CD
+	FROM TBC_CLC_ENCNTR_1 ce 
+	INNER JOIN TBC_ENCNTR_TYPE cet ON cet.ENCNTR_TYPE_ID = ce.ENCNTR_TYPE_ID
+	INNER JOIN TBC_CMN_SITE cs ON cs.SITE_ID = ce.SITE_ID
 )
 , attend AS (
 	SELECT 
@@ -136,6 +141,7 @@ FROM (
 GROUP BY AGE_INDEX
 ORDER BY AGE_INDEX;
 
+
 -------------------------------------------------------------------------------------------------------------------
 -- CIMST-33100: (TB&C) RPT-TBCS-STA-0019 Number of Treatment Attendance by Clinic
 -------------------------------------------------------------------------------------------------------------------
@@ -148,17 +154,22 @@ WITH TBC_CMN_SITE AS (
 	AND (cs.EXPY_DATE IS NULL OR trunc(cs.EXPY_DATE) >= TRUNC(SYSDATE))
 	AND cs.SITE_ID = DECODE(:i_site_id,'-', cs.SITE_ID, :i_site_id)
 )
-, TBC_CLC_ENCNTR AS (
+, TBC_CLC_ENCNTR_1 AS (
 	SELECT 
-		ce.ATND_ID, ce.PATIENT_KEY, TO_CHAR(ce.SDT, 'hh24:mi:ss') AS HHMMSS
+		ce.ATND_ID, ce.PATIENT_KEY, ce.SDT,ce.SITE_ID, ce.ENCNTR_TYPE_ID 
 	FROM CLC_ENCNTR ce 
-	INNER JOIN CLN_ENCNTR_TYPE cet ON cet.ENCNTR_TYPE_ID = ce.ENCNTR_TYPE_ID AND cet.ENCNTR_TYPE_CD = 'TBC_TREAT'
-	INNER JOIN TBC_CMN_SITE cs ON cs.SITE_ID = ce.SITE_ID
 	WHERE ce.SVC_CD = 'TBC'
 	AND ce.SITE_ID = DECODE(:i_site_id,'-', ce.SITE_ID, :i_site_id)
 	AND ce.SDT >= TO_DATE(:i_from_date, 'YYYY-MM-dd') AND ce.SDT < TO_DATE(:i_to_date, 'YYYY-MM-dd') + 1
 	AND nvl(ce.IS_CANCEL, 0) = 0
 	AND (ce.ENCNTR_STS IS NULL OR ce.ENCNTR_STS < 'D' OR ce.ENCNTR_STS > 'D')
+)
+, TBC_CLC_ENCNTR AS (
+	SELECT 
+		ce.ATND_ID, ce.PATIENT_KEY, TO_CHAR(ce.SDT, 'hh24:mi:ss') AS HHMMSS
+	FROM TBC_CLC_ENCNTR_1 ce 
+	INNER JOIN CLN_ENCNTR_TYPE cet ON cet.ENCNTR_TYPE_ID = ce.ENCNTR_TYPE_ID AND cet.ENCNTR_TYPE_CD = 'TBC_TREAT'
+	INNER JOIN TBC_CMN_SITE cs ON cs.SITE_ID = ce.SITE_ID
 )
 SELECT 
 	NVL(SUM(SESSION_OF_ARRIVAL_AM), 0) AS AM_TOTAL,

@@ -27,6 +27,7 @@ WITH TBC_CONS_ENCNTR_TYPES AS (
 	AND nvl(ce.IS_CANCEL,0) = 0
 	AND ce.SVC_CD='TBC'
 	AND ce.CASE_NO IS NOT NULL
+    AND ce.SDT < to_date(:i_endDate,'yyyy-mm-dd')+1
 )
 ,TBC_CONS_PERIOD_ACTIVE_CASENO AS (
 	SELECT DISTINCT ce.CASE_NO 
